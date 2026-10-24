@@ -1,12 +1,13 @@
 # 个人主页 & 博客
 
 一个用 **SvelteKit + TypeScript** 写的个人主页，带博客、标签和 RSS。
-构建时全站静态预渲染，运行时是一个很小的 Node 服务，可以直接 Docker 部署。
+界面用 Tailwind CSS 4 + [shadcn-svelte](https://shadcn-svelte.com) 搭建，构建时全站静态预渲染，
+运行时是一个很小的 Node 服务，可以直接 Docker 部署。
 
 - 首页 / 博客列表 / 文章详情 / 标签页 / 关于页 / 404 页
 - 文章用 Markdown 编写，frontmatter 提供标题、日期、摘要、标签、草稿等元信息
 - 文章自动生成目录锚点，代码块语法高亮（构建时完成，前端不加载高亮库）
-- 明暗主题切换，默认跟随系统，选择记在 `localStorage`
+- 明暗主题切换（浅色 / 深色 / 跟随系统），由 mode-watcher 负责，默认跟随系统
 - `/rss.xml` 构建时生成，零运行时依赖
 
 ## 技术栈
@@ -16,6 +17,9 @@
 | 框架 | SvelteKit 3（Svelte 5，runes 模式） |
 | 语言 | TypeScript |
 | 构建 | Vite 8 |
+| 样式 | Tailwind CSS 4 |
+| UI 组件 | shadcn-svelte（bits-ui + tailwind-variants + lucide 图标） |
+| 明暗主题 | mode-watcher |
 | Markdown | marked + gray-matter |
 | 代码高亮 | highlight.js（只引入常用语言） |
 | 部署 | adapter-node + Docker |
@@ -24,19 +28,22 @@
 
 ```
 src/
-├─ app.css              # 全局样式与设计变量（明暗主题都在这里）
-├─ app.html             # HTML 外壳，含首屏防闪烁的主题脚本
+├─ app.css              # Tailwind 入口、shadcn 的 stone 配色变量、文章排版
+├─ app.html             # HTML 外壳
 ├─ app.d.ts             # App.PageData 类型
 ├─ lib/
 │  ├─ site.ts           # 站点信息：名字、简介、社交链接、导航 ← 先改这里
 │  ├─ posts.ts          # 读取 Markdown、排序、标签、相关文章
 │  ├─ markdown.ts       # Markdown → HTML，标题锚点与代码高亮
 │  ├─ format.ts         # 日期格式化
-│  └─ components/       # Header / Footer / 主题切换 / 文章列表 / 标签
+│  ├─ utils.ts          # cn() 与 shadcn 的类型工具
+│  └─ components/
+│     ├─ Header / Footer / ModeToggle / PostList / TagLinks   # 站点组件
+│     └─ ui/            # shadcn 生成的组件：button / card / badge / separator / dropdown-menu / sheet
 ├─ posts/               # 文章：一篇 = 一个 .md 文件
 └─ routes/
    ├─ +layout.ts        # prerender = true（全站预渲染）
-   ├─ +layout.svelte    # 页头页脚与 SEO meta
+   ├─ +layout.svelte    # 页头页脚、SEO meta、ModeWatcher
    ├─ +page.server.ts   # 首页数据（服务端 load，构建时执行）
    ├─ +page.svelte      # 首页
    ├─ blog/             # 博客列表与 [slug] 详情（+page.server.ts 读 Markdown）
@@ -44,7 +51,8 @@ src/
    ├─ about/            # 关于
    ├─ rss.xml/          # RSS（+server.ts）
    └─ +error.svelte     # 404 等错误页
-static/                 # favicon、robots.txt 等原样拷贝的静态文件
+components.json          # shadcn 配置（别名指向 #lib/components/ui）
+static/                  # favicon、robots.txt 等原样拷贝的静态文件
 ```
 
 ## 本地开发
@@ -103,12 +111,26 @@ draft: false             # 可选，true 时只在开发环境显示
 3. 删除 `src/posts/` 里的示例文章，写自己的。
 4. 换掉 `static/favicon.svg`。
 
-## 主题
+## 界面与主题
 
-- 首次访问跟随系统 `prefers-color-scheme`；
-- 点右上角按钮切换，结果存到 `localStorage`；
-- `app.html` 里有一段内联脚本在首屏渲染前应用主题，避免闪白；
-- 配色全部是 `app.css` 顶部的 CSS 变量，改 `--bg`、`--text`、`--accent` 即可。
+界面是 shadcn-svelte 的默认风格（stone 配色），组件源码就在 `src/lib/components/ui/`，可以直接改。
+
+想加新组件，比如 `dialog`：
+
+```bash
+npx shadcn-svelte@latest add dialog
+```
+
+注意：CLI 会解析 `tsconfig.json` 的 `extends`，而本项目继承的是 SvelteKit 3 的虚拟配置 `$app/tsconfig`，
+CLI 读不到会报 `Error: File '$app/tsconfig' not found.`。临时把 `tsconfig.json` 换成普通配置
+（保留 `compilerOptions.paths` 里的 `#lib/*` 映射），装完再换回来即可。
+
+明暗主题：
+
+- 由 mode-watcher 负责，在 `<html>` 上加 `dark` 类，选择存在 `localStorage` 的 `mode-watcher-mode`；
+- 右上角下拉是「浅色 / 深色 / 跟随系统」三选一，默认跟随系统；
+- 配色是 `app.css` 里的 oklch 变量（`:root` 与 `.dark` 两套），改 `--background`、`--foreground`、`--primary` 就能换主色；
+- 文章正文用 `@tailwindcss/typography` 的 `prose`，再叠加 `.prose-article` 把颜色接到上面的变量上。
 
 ## Docker 部署
 
@@ -147,5 +169,6 @@ node build
 
 - 全站 `prerender = true`：构建时生成所有 HTML，运行时只做静态文件服务，不需要数据库或文件系统里的 Markdown。
 - 页面数据全部走 `+page.server.ts` 的 server load：解析 Markdown 依赖 Node 的 `Buffer`，打包进浏览器会崩，放在服务端既正确又让客户端不下载 marked / gray-matter。
+- SvelteKit 3 去掉了 `$lib` 别名，项目统一用 `#lib/*`：映射写在 `package.json` 的 `imports` 和 `tsconfig.json` 的 `paths` 里，`components.json` 的别名也指向它。
 - 因此新增文章后需要重新构建（或重启开发服务器），这也是静态站点的取舍。
 - 示例文章和占位信息只是让站点能跑起来，发布前记得替换。

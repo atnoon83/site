@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Card from '#lib/components/ui/card/index';
 	import { formatDate } from '#lib/format';
 	import type { PostMeta } from '#lib/posts';
 
@@ -6,82 +7,35 @@
 </script>
 
 {#if posts.length === 0}
-	<p class="muted">{empty}</p>
+	<p class="rounded-xl border border-dashed px-4 py-10 text-center text-sm text-muted-foreground">
+		{empty}
+	</p>
 {:else}
-	<ul class="post-list">
+	<div class="flex flex-col gap-3">
 		{#each posts as post (post.slug)}
-			<li>
-				<a class="post-link" href={`/blog/${post.slug}`}>
-					<time class="date muted" datetime={post.date}>{formatDate(post.date)}</time>
-					<span class="body">
-						<span class="title">{post.title}</span>
+			<a href={`/blog/${post.slug}`} class="group block rounded-xl focus-visible:outline-none">
+				<Card.Root
+					class="gap-2 border-border/70 bg-card/60 px-5 py-4 transition-colors group-hover:bg-accent/40 group-focus-visible:ring-2 group-focus-visible:ring-ring/50"
+				>
+					<Card.Header class="gap-1.5 px-0">
+						<div class="flex items-center gap-2 text-xs text-muted-foreground">
+							<time datetime={post.date}>{formatDate(post.date)}</time>
+							<span aria-hidden="true">·</span>
+							<span>{post.readingMinutes} 分钟</span>
+						</div>
+						<Card.Title
+							class="text-base font-medium tracking-tight group-hover:underline group-hover:underline-offset-4"
+						>
+							{post.title}
+						</Card.Title>
 						{#if post.description}
-							<span class="desc muted">{post.description}</span>
+							<Card.Description class="text-sm leading-relaxed text-muted-foreground">
+								{post.description}
+							</Card.Description>
 						{/if}
-					</span>
-				</a>
-			</li>
+					</Card.Header>
+				</Card.Root>
+			</a>
 		{/each}
-	</ul>
+	</div>
 {/if}
-
-<style>
-	.post-list {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.post-list li + li {
-		border-top: 1px solid var(--border);
-	}
-
-	.post-link {
-		display: grid;
-		grid-template-columns: 7.5rem 1fr;
-		gap: 1.25rem;
-		padding-block: 1.25rem;
-		align-items: baseline;
-	}
-
-	.date {
-		font-size: 0.875rem;
-		font-variant-numeric: tabular-nums;
-		white-space: nowrap;
-	}
-
-	.body {
-		display: flex;
-		flex-direction: column;
-		gap: 0.3rem;
-	}
-
-	.title {
-		font-size: 1.0625rem;
-		font-weight: 550;
-		letter-spacing: -0.01em;
-		transition: color 0.15s ease;
-	}
-
-	.post-link:hover .title {
-		color: var(--accent);
-	}
-
-	.desc {
-		font-size: 0.9375rem;
-		line-height: 1.65;
-	}
-
-	@media (max-width: 40rem) {
-		.post-link {
-			grid-template-columns: 1fr;
-			gap: 0.35rem;
-			padding-block: 1.1rem;
-		}
-
-		.date {
-			order: -1;
-			font-size: 0.8125rem;
-		}
-	}
-</style>

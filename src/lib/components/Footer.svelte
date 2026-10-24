@@ -4,52 +4,19 @@
 	const year = new Date().getFullYear();
 </script>
 
-<footer class="site-footer">
-	<div class="container footer-inner">
-		<p class="muted">© {year} {site.copyright || site.name}</p>
-		<ul class="socials">
+<footer class="border-t border-border/70">
+	<div
+		class="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground"
+	>
+		<p>© {year} {site.copyright || site.name}</p>
+		<ul class="flex flex-wrap items-center gap-5">
 			{#each site.socials as social (social.href)}
-				<li><a href={social.href} rel="me">{social.label}</a></li>
+				<li>
+					<a class="transition-colors hover:text-foreground" href={social.href} rel="me"
+						>{social.label}</a
+					>
+				</li>
 			{/each}
 		</ul>
 	</div>
 </footer>
-
-<style>
-	.site-footer {
-		margin-top: auto;
-		padding-block: 2.5rem 3rem;
-		border-top: 1px solid var(--border);
-	}
-
-	.footer-inner {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		font-size: 0.875rem;
-	}
-
-	p {
-		margin: 0;
-	}
-
-	.socials {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1.1rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.socials a {
-		color: var(--text-muted);
-		transition: color 0.15s ease;
-	}
-
-	.socials a:hover {
-		color: var(--text);
-	}
-</style>

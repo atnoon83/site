@@ -17,14 +17,25 @@
 	"dependencies": {
 		"gray-matter": "^4.0.3",
 		"highlight.js": "^11.12.0",
-		"marked": "^18.1.1"
+		"marked": "^18.1.1",
+		"mode-watcher": "^1.1.0"
 	},
 	"devDependencies": {
+		"@internationalized/date": "^3.12.0",
+		"@lucide/svelte": "^1.60.0",
 		"@sveltejs/adapter-node": "^6.0.0",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
+		"@tailwindcss/typography": "^0.5.20",
+		"@tailwindcss/vite": "^4.3.3",
+		"bits-ui": "^2.20.2",
+		"clsx": "^2.1.1",
 		"svelte": "^5.57.1",
 		"svelte-check": "^4.6.0",
+		"tailwind-merge": "^3.7.0",
+		"tailwind-variants": "^3.3.1",
+		"tailwindcss": "^4.3.3",
+		"tw-animate-css": "^1.4.0",
 		"typescript": "^6.0.3",
 		"vite": "^8.3.0"
 	},

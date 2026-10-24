@@ -1,19 +1,17 @@
 <script lang="ts">
+	import { Badge } from '#lib/components/ui/badge/index';
 	import { site } from '#lib/site';
-	import type { PageProps } from './$types';
 
-	let { data }: PageProps = $props();
-
-	const stack = ['SvelteKit', 'TypeScript', 'Markdown', 'Docker'];
+	const stack = ['SvelteKit', 'TypeScript', 'Tailwind CSS', 'shadcn-svelte', 'Markdown', 'Docker'];
 </script>
 
-<div class="container page">
-	<header class="page-head">
-		<h1>关于</h1>
-		<p class="muted">更新于 2026 年</p>
+<div class="mx-auto w-full max-w-3xl px-6 py-14">
+	<header class="mb-10">
+		<h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">关于</h1>
+		<p class="mt-3 text-sm text-muted-foreground">更新于 2026 年</p>
 	</header>
 
-	<div class="prose about">
+	<div class="prose prose-article max-w-none">
 		<p>
 			你好，我是 <strong>{site.name}</strong>，{site.role}。这里是我的个人主页，也是我的笔记本。
 		</p>
@@ -26,15 +24,15 @@
 
 		<h2>这个站点</h2>
 		<p>
-			站点用 SvelteKit 和 TypeScript 写成，构建时静态预渲染，所以访问很快、也不需要数据库。
-			文章是 <code>src/posts</code> 下的 Markdown 文件，带 frontmatter 元信息，
-			构建时会自动生成列表、标签和 RSS。
+			站点用 SvelteKit 和 TypeScript 写成，界面选的是 shadcn-svelte 的默认风格，
+			构建时静态预渲染，所以访问很快、也不需要数据库。文章是
+			<code>src/posts</code> 下的 Markdown 文件，带 frontmatter 元信息，构建时会自动生成列表、标签和 RSS。
 		</p>
 
 		<h2>技术栈</h2>
-		<ul class="stack">
+		<ul class="not-prose mt-4 flex flex-wrap gap-2">
 			{#each stack as item (item)}
-				<li class="chip">{item}</li>
+				<li><Badge variant="secondary">{item}</Badge></li>
 			{/each}
 		</ul>
 
@@ -48,39 +46,3 @@
 		</p>
 	</div>
 </div>
-
-<style>
-	.page {
-		width: min(100% - 2.5rem, 46rem);
-		padding-block: clamp(2.5rem, 6vw, 4rem);
-	}
-
-	.page-head {
-		margin-bottom: 2rem;
-	}
-
-	h1 {
-		margin: 0 0 0.4rem;
-		font-size: clamp(1.9rem, 4vw, 2.4rem);
-		letter-spacing: -0.03em;
-		font-weight: 650;
-	}
-
-	.page-head p {
-		margin: 0;
-		font-size: 0.9375rem;
-	}
-
-	.about > :first-child {
-		margin-top: 0;
-	}
-
-	.stack {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-</style>

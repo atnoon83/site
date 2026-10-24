@@ -1,52 +1,27 @@
 <script lang="ts">
+	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+	import { buttonVariants } from '#lib/components/ui/button/index';
 	import PostList from '#lib/components/PostList.svelte';
+	import { cn } from '#lib/utils';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 </script>
 
-<div class="container page">
-	<nav class="back" aria-label="返回">
-		<a class="muted" href="/tags">← 全部标签</a>
-	</nav>
+<div class="mx-auto w-full max-w-3xl px-6 py-10">
+	<a
+		href="/tags"
+		class={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), '-ml-3 mb-8 gap-1.5')}
+	>
+		<ArrowLeftIcon class="size-4" />
+		全部标签
+	</a>
 
-	<header class="page-head">
-		<p class="eyebrow muted">标签</p>
-		<h1>{data.tag}</h1>
-		<p class="muted">共 {data.posts.length} 篇文章</p>
+	<header class="mb-8">
+		<p class="text-sm text-muted-foreground">标签</p>
+		<h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{data.tag}</h1>
+		<p class="mt-3 text-sm text-muted-foreground">共 {data.posts.length} 篇文章</p>
 	</header>
 
 	<PostList posts={data.posts} />
 </div>
-
-<style>
-	.page {
-		padding-block: 2rem 4rem;
-	}
-
-	.back {
-		margin-bottom: 1.75rem;
-		font-size: 0.9375rem;
-	}
-
-	.back a:hover {
-		color: var(--text);
-	}
-
-	.eyebrow {
-		margin: 0 0 0.35rem;
-		font-size: 0.9375rem;
-	}
-
-	h1 {
-		margin: 0 0 0.5rem;
-		font-size: clamp(1.9rem, 4vw, 2.4rem);
-		letter-spacing: -0.03em;
-		font-weight: 650;
-	}
-
-	.page-head p:last-child {
-		margin: 0;
-		font-size: 0.9375rem;
-	}
-</style>

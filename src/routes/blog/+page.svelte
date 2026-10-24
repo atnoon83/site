@@ -5,41 +5,16 @@
 	let { data }: PageProps = $props();
 </script>
 
-<div class="container page">
-	<header class="page-head">
-		<h1>博客</h1>
-		<p class="muted">
-			共 {data.posts.length} 篇，按时间倒序排列。也可以订阅 <a href="/rss.xml">RSS</a>。
+<div class="mx-auto w-full max-w-3xl px-6 py-14">
+	<header class="mb-8">
+		<h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">博客</h1>
+		<p class="mt-3 text-sm text-muted-foreground">
+			共 {data.posts.length} 篇，按时间倒序排列。也可以订阅
+			<a class="underline underline-offset-4 transition-colors hover:text-foreground" href="/rss.xml"
+				>RSS</a
+			>。
 		</p>
 	</header>
 
 	<PostList posts={data.posts} empty="还没有发布文章。" />
 </div>
-
-<style>
-	.page {
-		padding-block: clamp(2.5rem, 6vw, 4rem);
-	}
-
-	.page-head {
-		margin-bottom: 1.5rem;
-	}
-
-	h1 {
-		margin: 0 0 0.5rem;
-		font-size: clamp(1.9rem, 4vw, 2.4rem);
-		letter-spacing: -0.03em;
-		font-weight: 650;
-	}
-
-	.page-head p {
-		margin: 0;
-		font-size: 0.9375rem;
-	}
-
-	.page-head a {
-		color: var(--accent);
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-</style>

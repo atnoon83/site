@@ -1,29 +1,26 @@
 <script lang="ts">
-	let { tags, size = 'normal' }: { tags: string[]; size?: 'normal' | 'small' } = $props();
+	import { Badge } from '#lib/components/ui/badge/index';
+	import { cn } from '#lib/utils';
+
+	let {
+		tags,
+		size = 'normal'
+	}: {
+		tags: string[];
+		size?: 'normal' | 'small';
+	} = $props();
 </script>
 
 {#if tags.length > 0}
-	<ul class="tags" class:small={size === 'small'}>
+	<ul class="flex flex-wrap gap-2">
 		{#each tags as tag (tag)}
 			<li>
-				<a class="chip" href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+				<Badge
+					href={`/tags/${encodeURIComponent(tag)}`}
+					variant="secondary"
+					class={cn(size === 'small' && 'text-[11px]')}>{tag}</Badge
+				>
 			</li>
 		{/each}
 	</ul>
 {/if}
-
-<style>
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.small :global(.chip) {
-		font-size: 0.75rem;
-		padding: 0.05rem 0.5rem;
-	}
-</style>

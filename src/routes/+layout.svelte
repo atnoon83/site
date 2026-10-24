@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { ModeWatcher } from 'mode-watcher';
 	import { page } from '$app/state';
 	import Footer from '#lib/components/Footer.svelte';
 	import Header from '#lib/components/Header.svelte';
@@ -26,9 +27,19 @@
 	<meta name="twitter:card" content="summary" />
 </svelte:head>
 
-<a class="skip-link" href="#main">跳到正文</a>
-<Header />
-<main id="main">
-	{@render children()}
-</main>
-<Footer />
+<ModeWatcher />
+
+<a
+	href="#main"
+	class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-primary-foreground"
+>
+	跳到正文
+</a>
+
+<div class="flex min-h-svh flex-col">
+	<Header />
+	<main id="main" class="flex-1">
+		{@render children()}
+	</main>
+	<Footer />
+</div>
